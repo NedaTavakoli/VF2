@@ -27,8 +27,8 @@ The four executables implement different algorithms to achieve variant graph siz
 SYNOPSIS
         greedy_snp       -a <alpha> -d <delta> -vcf <file> -chr <id>
         lp_snp           -a <alpha> -d <delta> -vcf <file> -chr <id>
-        greedy_sv_indels -a <alpha> -d <delta> -vcf <file> -chr <id>
-        ilp_sv_indels    -a <alpha> -d <delta> -vcf <file> -chr <id> [--pos]
+        greedy_snp_indels -a <alpha> -d <delta> -vcf <file> -chr <id>
+        ilp_snp_indels    -a <alpha> -d <delta> -vcf <file> -chr <id> [--pos]
 
 
 OPTIONS
