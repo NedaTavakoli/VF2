@@ -20,7 +20,8 @@ int main(int argc, char **argv) {
 
   //*********************************************************
   // Extract SNPs and allele count from VCF
-  srand(time(0)); int random = rand() % 10000;  
+  // seed random generator by time in seconds (this may create issue if two instances are launched at the same time)
+  srand(time(0)); int random = rand() % 100000;  
   std::string tmp_file = ".VF." + std::to_string(random) + ".txt";
   std::string cmd = std::string(TOSTRING(VCFTOOLSPATH)) + " --vcf " + parameters.vcffile + " --chr " + parameters.chr + " --counts --remove-indels --out " + tmp_file + " 2>/dev/null";
   std::cout << "INFO, VF::main, extracting SNPs from vcf file using command = " << cmd << std::endl;
@@ -93,6 +94,9 @@ int main(int argc, char **argv) {
     std::vector<double> zeros (n, 0.0);
     std::vector<double> ones (n, 1.0);
     std::vector<char> type (n, GRB_CONTINUOUS);
+    //std::vector<char> type (n, GRB_BINARY);
+    //NOTE: I'm finding that Gurobi requires less memory for ILP than LP, not sure why
+    //TODO:use ILP instead?
 
     x = model.addVars(zeros.data(), ones.data(), NULL, type.data(), NULL, n);
 
@@ -154,6 +158,7 @@ int main(int argc, char **argv) {
 
   std::cout<< "INFO, VF::main, count of variants retained = " << std::accumulate(new_c.begin(), new_c.end(), 0) << "\n";
   printVariantGapStats (R, p);
+  if (parameters.prefix.length() > 0) print_snp_vcf(R, p, parameters);
 
   //clear memory
   delete[] x;
